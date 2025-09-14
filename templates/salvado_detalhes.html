@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4  container mt-4">Detalhes do Salvado</h2>
+<div class="card p-4 shadow-sm  container mt-4">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <strong>Status:</strong> {{ salvado.status }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Sinistro:</strong> {{ salvado.sinistro }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Apólice:</strong> {{ salvado.apolice }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Recebimento Salvado:</strong> {{
+            salvado.data_recebimento_salvado|default('')|strftime('%d/%m/%Y') if salvado.data_recebimento_salvado else
+            '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Pedido Cotação Remoção:</strong> {{
+            salvado.data_pedido_cotacao_remocao|default('')|strftime('%d/%m/%Y') if salvado.data_pedido_cotacao_remocao
+            else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Nome Segurado:</strong> {{ salvado.nome_segurado }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Nome Terceiro:</strong> {{ salvado.nome_terceiro }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Placa:</strong> {{ salvado.placa }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Marca:</strong> {{ salvado.marca }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Modelo:</strong> {{ salvado.modelo }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Ano:</strong> {{ salvado.ano }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>N° FIPE:</strong> {{ salvado.n_fipe }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Valor FIPE:</strong> {{ salvado.valor_fipe|currency if salvado.valor_fipe is not none else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Mês/Ano Ref. FIPE:</strong> {{ salvado.mes_ano_ref_fipe|default('') }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Leiloeiro:</strong> {{ salvado.leiloeiro }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Status Remoção Leiloeiro:</strong> {{ salvado.status_remocao_leiloeiro }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Local Atual Veículo:</strong> {{ salvado.local_atual_veiculo }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Entrada Pátio Leiloeiro:</strong> {{
+            salvado.data_entrada_patio_leiloeiro|default('')|strftime('%d/%m/%Y') if
+            salvado.data_entrada_patio_leiloeiro else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Vistorias Solicitada - Monta:</strong> {{
+            salvado.vistorias_solicitada_monta|default('')|strftime('%d/%m/%Y') if salvado.vistorias_solicitada_monta
+            else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Vistorias Recebidas - Monta:</strong> {{
+            salvado.vistorias_recebidas_monta|default('')|strftime('%d/%m/%Y') if salvado.vistorias_recebidas_monta else
+            '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Vistorias Solicitada - ECV:</strong> {{
+            salvado.vistorias_solicitada_ecv|default('')|strftime('%d/%m/%Y') if salvado.vistorias_solicitada_ecv else
+            '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Vistorias Recebidas - ECV:</strong> {{
+            salvado.vistorias_recebidas_ecv|default('')|strftime('%d/%m/%Y') if salvado.vistorias_recebidas_ecv else ''
+            }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Classificação de Danos:</strong> {{ salvado.classificacao_danos }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>ECV:</strong> {{ salvado.ecv }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Valor Total da Indenização:</strong> {{ salvado.valor_total_indenizacao|currency if
+            salvado.valor_total_indenizacao is not none else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Franquia - Outros Descontos:</strong> {{ salvado.franquia_outros_descontos|currency if
+            salvado.franquia_outros_descontos is not none else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Valor Pago pela Cia:</strong> {{ salvado.valor_pago_pela_cia|currency if salvado.valor_pago_pela_cia
+            is not none else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Pagto Indenização:</strong> {{ salvado.data_pagto_indenizacao|default('')|strftime('%d/%m/%Y')
+            if salvado.data_pagto_indenizacao else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Recebimento Docs para Emissão NF Entrada:</strong> {{
+            salvado.data_recebimento_docs_nf_entrada|default('')|strftime('%d/%m/%Y') if
+            salvado.data_recebimento_docs_nf_entrada else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Solicitação NF Entrada:</strong> {{
+            salvado.data_solicitacao_nf_entrada|default('')|strftime('%d/%m/%Y') if salvado.data_solicitacao_nf_entrada
+            else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Recebimento NF Entrada:</strong> {{
+            salvado.data_recebimento_nf_entrada|default('')|strftime('%d/%m/%Y') if salvado.data_recebimento_nf_entrada
+            else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>N° NF Entrada:</strong> {{ salvado.n_nf_entrada }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Valor NF Entrada:</strong> {{ salvado.valor_nf_entrada|currency if salvado.valor_nf_entrada is not
+            none else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Solicitação NF Saída:</strong> {{
+            salvado.data_solicitacao_nf_saida|default('')|strftime('%d/%m/%Y') if salvado.data_solicitacao_nf_saida else
+            '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Recebimento NF Saída:</strong> {{
+            salvado.data_recebimento_nf_saida|default('')|strftime('%d/%m/%Y') if salvado.data_recebimento_nf_saida else
+            '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>N° NF Saída:</strong> {{ salvado.n_nf_saida }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Valor NF Saída:</strong> {{ salvado.valor_nf_saida|currency if salvado.valor_nf_saida is not none
+            else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Solicitação Recorte Chassi:</strong> {{
+            salvado.data_solicitacao_recorte_chassi|default('')|strftime('%d/%m/%Y') if
+            salvado.data_solicitacao_recorte_chassi else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Recebimento Recorte Chassi:</strong> {{
+            salvado.data_recebimento_recorte_chassi|default('')|strftime('%d/%m/%Y') if
+            salvado.data_recebimento_recorte_chassi else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Docs Disponível Despachante - Transf. Seguradora:</strong> {{
+            salvado.data_docs_disponivel_transf_seguradora|default('')|strftime('%d/%m/%Y') if
+            salvado.data_docs_disponivel_transf_seguradora else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Recebimento Docs Despachante - Transf. Seguradora:</strong> {{
+            salvado.data_recebimento_docs_transf_seguradora|default('')|strftime('%d/%m/%Y') if
+            salvado.data_recebimento_docs_transf_seguradora else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Venda do Salvado (Leilão):</strong> {{
+            salvado.data_venda_salvado|default('')|strftime('%d/%m/%Y') if salvado.data_venda_salvado else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Valor da Venda:</strong> {{ salvado.valor_venda|currency if salvado.valor_venda is not none else ''
+            }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Nome Arrematante:</strong> {{ salvado.nome_arrematante }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Docs Disponível Despachante - Transf. Arrematante:</strong> {{
+            salvado.data_docs_disponivel_transf_arrematante|default('')|strftime('%d/%m/%Y') if
+            salvado.data_docs_disponivel_transf_arrematante else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Data Recebimento Docs Despachante - Transf. Arrematante:</strong> {{
+            salvado.data_recebimento_docs_transf_arrematante|default('')|strftime('%d/%m/%Y') if
+            salvado.data_recebimento_docs_transf_arrematante else '' }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Doc Transferido ao Arrematante:</strong> {{ salvado.doc_transferido_arrematante }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <strong>Analista Responsável:</strong> {{ salvado.analista_responsavel }}
+        </div>
+        <div class="col-md-12 mb-3">
+            <strong>Histórico:</strong>
+            <pre>{{ salvado.historico }}</pre>
+        </div>
+    </div>
+    <div class="mt-3">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
+        <a href="{{ url_for('atualizar', id=salvado.id) }}" class="btn btn-primary">Editar</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dateFields = document.querySelectorAll('input[type="date"]');
+        dateFields.forEach(field => {
+            field.addEventListener('change', function () {
+                const value = this.value;
+                if (value) {
+                    const [year, month, day] = value.split('-');
+                    this.value = `${year}-${month}-${day}`; // Mantém o formato ISO para o backend
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

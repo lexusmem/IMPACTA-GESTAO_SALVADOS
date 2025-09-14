@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4  container mt-4">Lista de Salvados</h2>
+<div class="table-responsive  container mt-4">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Sinistro</th>
+                <th>Placa</th>
+                <th>Analista</th>
+                <th>Data Salvado</th>
+                <th>Ações</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for salvado in salvados %}
+            <tr style="cursor: pointer;" onclick="window.location='{{ url_for('detalhes', id=salvado.id) }}';">
+                <td>{{ salvado.id }}</td>
+                <td>{{ salvado.sinistro }}</td>
+                <td>{{ salvado.placa }}</td>
+                <td>{{ salvado.analista_responsavel }}</td>
+                <td>{{ salvado.data_recebimento_salvado|strftime('%d/%m/%Y') }}</td>
+                <td>
+                    <span class="badge bg-{{ 'success' if salvado.status == 'Finalizado' else 'primary' }}">{{
+                        salvado.status }}</span>
+                </td>
+                <td>
+                    <a href="{{ url_for('atualizar', id=salvado.id) }}" class="btn btn-sm btn-outline-primary"
+                        onclick="event.stopPropagation();">Atualizar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

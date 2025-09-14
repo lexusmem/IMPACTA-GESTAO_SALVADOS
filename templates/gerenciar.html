@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link {% if secao == 'status' %}active{% endif %}"
+                            href="{{ url_for('gerenciar', secao='status') }}">
+                            Status
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if secao == 'analistas' %}active{% endif %}"
+                            href="{{ url_for('gerenciar', secao='analistas') }}">
+                            Analistas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if secao == 'leiloeiros' %}active{% endif %}"
+                            href="{{ url_for('gerenciar', secao='leiloeiros') }}">
+                            Leiloeiros
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <h2 class="mt-4 mb-4">Gerenciar {% if secao == 'status' %}Status{% elif secao == 'analistas' %}Analistas{%
+                else %}Leiloeiros{% endif %}</h2>
+
+            {% if secao == 'status' %}
+            <form method="POST" class="mb-4">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Novo Status</label>
+                        <input type="text" class="form-control" name="novo_status" placeholder="Novo Status" required>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <input type="hidden" name="acao" value="inserir">
+                        <button type="submit" class="btn btn-primary">Adicionar</button>
+                    </div>
+                </div>
+            </form>
+            <div style="overflow-x: auto;">
+                <table class="table table-striped" style="font-size: 0.9rem;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 0.5rem;">ID</th>
+                            <th style="padding: 0.5rem;">Nome</th>
+                            <th style="padding: 0.5rem;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for status in status_opcoes %}
+                        <tr>
+                            <td style="padding: 0.5rem;">{{ status[0] }}</td>
+                            <td style="padding: 0.5rem;">
+                                <form method="POST" class="d-inline">
+                                    <input type="text" name="novo_nome" value="{{ status[1] }}"
+                                        class="form-control d-inline-block"
+                                        style="width: 250px; font-size: 0.9rem; padding: 0.25rem;">
+                                    <input type="hidden" name="status_id" value="{{ status[0] }}">
+                                    <input type="hidden" name="acao" value="alterar">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary"
+                                        style="padding: 0.1rem 0.5rem;">Salvar</button>
+                                </form>
+                            </td>
+                            <td style="padding: 0.5rem;">
+                                <form method="POST" class="d-inline">
+                                    <input type="hidden" name="status_id" value="{{ status[0] }}">
+                                    <input type="hidden" name="acao" value="excluir">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                        style="padding: 0.1rem 0.5rem;">Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% elif secao == 'analistas' %}
+            <form method="POST" class="mb-4">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nome</label>
+                        <input type="text" class="form-control" name="nome" placeholder="Nome" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">E-mail</label>
+                        <input type="email" class="form-control" name="email" placeholder="E-mail" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Cargo</label>
+                        <select class="form-select" name="cargo">
+                            <option value="">Selecione</option>
+                            <option value="Subscrição">Subscrição</option>
+                            <option value="Gerente">Gerente</option>
+                            <option value="Diretor">Diretor</option>
+                            <option value="Auxiliar">Auxiliar</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <input type="hidden" name="acao" value="inserir">
+                        <button type="submit" class="btn btn-primary">Adicionar</button>
+                    </div>
+                </div>
+            </form>
+            <div style="overflow-x: auto;">
+                <table class="table table-striped" style="font-size: 0.9rem;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 0.5rem;">ID</th>
+                            <th style="padding: 0.5rem;">Nome</th>
+                            <th style="padding: 0.5rem;">E-mail</th>
+                            <th style="padding: 0.5rem;">Cargo</th>
+                            <th style="padding: 0.5rem;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for analista in analistas %}
+                        <tr>
+                            <td style="padding: 0.5rem;">{{ analista[0] }}</td>
+                            <td style="padding: 0.5rem;">
+                                <form method="POST" class="d-inline">
+                                    <input type="text" name="nome" value="{{ analista[1] }}"
+                                        class="form-control d-inline-block"
+                                        style="width: 200px; font-size: 0.9rem; padding: 0.25rem;">
+                                    <input type="hidden" name="analista_id" value="{{ analista[0] }}">
+                                    <input type="hidden" name="acao" value="alterar">
+                            </td>
+                            <td style="padding: 0.5rem;">
+                                <input type="email" name="email" value="{{ analista[2] }}"
+                                    class="form-control d-inline-block"
+                                    style="width: 200px; font-size: 0.9rem; padding: 0.25rem;">
+                            </td>
+                            <td style="padding: 0.5rem;">
+                                <select name="cargo" class="form-select d-inline-block"
+                                    style="width: 150px; font-size: 0.9rem; padding: 0.25rem;">
+                                    <option value="" {% if not analista[3] %}selected{% endif %}>Selecione</option>
+                                    <option value="Subscrição" {% if analista[3]=='Subscrição' %}selected{% endif %}>
+                                        Subscrição</option>
+                                    <option value="Gerente" {% if analista[3]=='Gerente' %}selected{% endif %}>Gerente
+                                    </option>
+                                    <option value="Diretor" {% if analista[3]=='Diretor' %}selected{% endif %}>Diretor
+                                    </option>
+                                    <option value="Auxiliar" {% if analista[3]=='Auxiliar' %}selected{% endif %}>
+                                        Auxiliar</option>
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-outline-primary"
+                                    style="padding: 0.1rem 0.5rem;">Salvar</button>
+                                </form>
+                            </td>
+                            <td style="padding: 0.5rem;">
+                                <form method="POST" class="d-inline">
+                                    <input type="hidden" name="analista_id" value="{{ analista[0] }}">
+                                    <input type="hidden" name="acao" value="excluir">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                        style="padding: 0.1rem 0.5rem;">Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% elif secao == 'leiloeiros' %}
+            <form method="POST" class="mb-4">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nome</label>
+                        <input type="text" class="form-control" name="nome" placeholder="Nome" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Endereço</label>
+                        <input type="text" class="form-control" name="endereco" placeholder="Endereço">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Telefone</label>
+                        <input type="text" class="form-control" name="telefone" placeholder="Telefone">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Responsável</label>
+                        <input type="text" class="form-control" name="responsavel" placeholder="Responsável">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">E-mail</label>
+                        <input type="email" class="form-control" name="email" placeholder="E-mail">
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <input type="hidden" name="acao" value="inserir">
+                        <button type="submit" class="btn btn-primary">Adicionar</button>
+                    </div>
+                </div>
+            </form>
+            <div style="overflow-x: auto;">
+                <table class="table table-striped" style="font-size: 0.9rem;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 0.5rem;">ID</th>
+                            <th style="padding: 0.5rem;">Nome</th>
+                            <th style="padding: 0.5rem;">Endereço</th>
+                            <th style="padding: 0.5rem;">Telefone</th>
+                            <th style="padding: 0.5rem;">Responsável</th>
+                            <th style="padding: 0.5rem;">E-mail</th>
+                            <th style="padding: 0.5rem;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for leiloeiro in leiloeiros %}
+                        <tr>
+                            <td style="padding: 0.5rem;">{{ leiloeiro[0] }}</td>
+                            <td style="padding: 0.5rem;">
+                                <form method="POST" class="d-inline">
+                                    <input type="text" name="nome" value="{{ leiloeiro[1] }}"
+                                        class="form-control d-inline-block"
+                                        style="width: 150px; font-size: 0.9rem; padding: 0.25rem;">
+                                    <input type="hidden" name="leiloeiro_id" value="{{ leiloeiro[0] }}">
+                                    <input type="hidden" name="acao" value="alterar">
+                            </td>
+                            <td style="padding: 0.5rem;">
+                                <input type="text" name="endereco" value="{{ leiloeiro[2] }}"
+                                    class="form-control d-inline-block"
+                                    style="width: 150px; font-size: 0.9rem; padding: 0.25rem;">
+                            </td>
+                            <td style="padding: 0.5rem;">
+                                <input type="text" name="telefone" value="{{ leiloeiro[3] }}"
+                                    class="form-control d-inline-block"
+                                    style="width: 100px; font-size: 0.9rem; padding: 0.25rem;">
+                            </td>
+                            <td style="padding: 0.5rem;">
+                                <input type="text" name="responsavel" value="{{ leiloeiro[4] }}"
+                                    class="form-control d-inline-block"
+                                    style="width: 100px; font-size: 0.9rem; padding: 0.25rem;">
+                            </td>
+                            <td style="padding: 0.5rem;">
+                                <input type="email" name="email" value="{{ leiloeiro[5] }}"
+                                    class="form-control d-inline-block"
+                                    style="width: 150px; font-size: 0.9rem; padding: 0.25rem;">
+                                <button type="submit" class="btn btn-sm btn-outline-primary"
+                                    style="padding: 0.1rem 0.5rem;">Salvar</button>
+                                </form>
+                            </td>
+                            <td style="padding: 0.5rem;">
+                                <form method="POST" class="d-inline">
+                                    <input type="hidden" name="leiloeiro_id" value="{{ leiloeiro[0] }}">
+                                    <input type="hidden" name="acao" value="excluir">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                        style="padding: 0.1rem 0.5rem;">Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </main>
+    </div>
+</div>
+{% endblock %}

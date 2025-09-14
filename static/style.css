@@ -1,0 +1,100 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.btn-outline-primary {
+    transition: all 0.3s;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+.badge {
+    padding: 0.5em 1em;
+    font-size: 0.9em;
+}
+
+.table-hover tbody tr {
+    cursor: pointer;
+}
+
+/* Estilo para campos inválidos */
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: #dc3545 !important;
+    background-image: none;
+}
+
+/* Estilo para a barra lateral */
+.bg-light {
+    border-right: 1px solid #dee2e6;
+}
+
+.nav-link {
+    color: #333;
+    padding: 10px 20px;
+}
+
+.nav-link:hover {
+    background-color: #e9ecef;
+    color: #007bff;
+}
+
+.nav-link.active {
+    background-color: #007bff;
+    color: white !important;
+}
+
+/* Ajuste para evitar sobreposição */
+body {
+    overflow-x: hidden;
+}
+
+/* Estilo para os links da navbar */
+.navbar-dark .navbar-nav .nav-link {
+    color: #fff;
+    /* Cor branca, igual ao "Gestão de Salvados" */
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:focus {
+    color: #333;
+    /* Tom claro de azul para hover, para contraste */
+}
