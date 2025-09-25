@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-<h2 class="mb-4  container mt-4">Lista de Salvados</h2>
+<div class="container mt-4 d-flex justify-content-between align-items-center">
+    <h2 class="mb-0">Lista de Salvados</h2>
+    <a href="{{ url_for('exportar_salvados') }}" class="btn btn-success">
+        📥 Exportar Salvados
+    </a>
+</div>
 <div class="table-responsive  container mt-4">
     <table class="table table-striped table-hover">
         <thead class="table-dark">

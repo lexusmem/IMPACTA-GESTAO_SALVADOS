@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for
 from models import Salvado, Database
 from datetime import datetime
+import csv
+from flask import Response
+import io
 
 app = Flask(__name__)
 db = Database()
@@ -49,6 +52,45 @@ app.jinja_env.filters['currency'] = currency_filter
 def index():
     salvados = db.get_all_salvados()
     return render_template('index.html', salvados=salvados)
+
+
+@app.route('/exportar_salvados')
+def exportar_salvados():
+    salvados = db.get_all_salvados()
+
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter=';')
+
+    writer.writerow(['ID', 'Sinistro', 'Placa',
+                    'Analista', 'Data Salvado', 'Status'])
+
+    for s in salvados:
+        data_salvado = s.data_recebimento_salvado
+        if isinstance(data_salvado, str):
+            try:
+                data_salvado = datetime.strptime(data_salvado, "%Y-%m-%d")
+            except ValueError:
+                # se não bater o formato, deixa como string original
+                pass
+
+        data_formatada = (
+            data_salvado.strftime("%d/%m/%Y")
+            if isinstance(data_salvado, datetime)
+            else (data_salvado or "")
+        )
+
+        writer.writerow([
+            s.id,
+            s.sinistro,
+            s.placa,
+            s.analista_responsavel,
+            data_formatada,
+            s.status
+        ])
+
+    response = Response(output.getvalue(), mimetype="text/csv")
+    response.headers["Content-Disposition"] = "attachment; filename=salvados.csv"
+    return response
 
 
 @app.route('/salvado', methods=['GET', 'POST'])
