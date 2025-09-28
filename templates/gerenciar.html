@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
+
+<!-- Modal de alerta: erro ao incluir status, analista ou leiloeiro existente-->
+{% if erro_modal %}
+<div id="modal-alerta" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-top:0;">Erro</h3>
+        <p>{{ erro_modal }}</p>
+        <button class="btn-modal-ok" onclick="document.getElementById('modal-alerta').style.display='none'">OK</button>
+    </div>
+</div>
+{% endif %}
+
 <div class="container-fluid">
     <div class="row">
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">

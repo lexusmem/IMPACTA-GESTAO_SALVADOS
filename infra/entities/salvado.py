@@ -14,7 +14,7 @@ class Salvado(Base):
     data_pedido_cotacao_remocao = Column(Date)
     nome_segurado = Column(String)
     nome_terceiro = Column(String)
-    placa = Column(String)
+    placa = Column(String(7), nullable=True, unique=True)
     marca = Column(String)
     modelo = Column(String)
     ano = Column(String)

@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
+
+<!-- Modal de alerta: erro ao incluir placa existente -->
+{% if erro_modal %}
+<div id="modal-alerta" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-top:0;">Erro</h3>
+        <p>{{ erro_modal }}</p>
+        <button class="btn-modal-ok" onclick="document.getElementById('modal-alerta').style.display='none'">OK</button>
+    </div>
+</div>
+{% endif %}
+
 <h2 class="mb-4  container mt-4">{% if salvado %}Atualizar Salvado{% else %}Adicionar Salvado{% endif %}</h2>
 {% if errors %}
 <div class="alert alert-danger  container mt-4">

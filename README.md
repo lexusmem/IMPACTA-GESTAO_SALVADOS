@@ -1,0 +1,1 @@
+pip install flask sqlalchemy sqlalchemy-utils pyodbc

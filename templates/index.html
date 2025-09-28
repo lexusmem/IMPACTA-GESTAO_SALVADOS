@@ -1,11 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
+
+<!-- Container para botão lista de salvados -->
 <div class="container mt-4 d-flex justify-content-between align-items-center">
     <h2 class="mb-0">Lista de Salvados</h2>
-    <a href="{{ url_for('exportar_salvados') }}" class="btn btn-success">
+    <button id="btnExportar" class="btn btn-success">
         📥 Exportar Salvados
-    </a>
+    </button>
 </div>
+
+<!-- Container para alerta -->
+<div id="alerta-salvados" class="container mt-4" style="display:none;">
+    <div class="alert alert-warning text-center" role="alert">
+        <strong>Atenção:</strong> Não existem salvados cadastrados.
+    </div>
+</div>
+
+<!-- Script para exportar salvados -->
+<script>
+    document.getElementById('btnExportar').addEventListener('click', function () {
+        var salvadosCount = {{ salvados| length
+    }};
+    if (salvadosCount === 0) {
+        document.getElementById('alerta-salvados').style.display = 'block';
+    } else {
+        window.location.href = "{{ url_for('exportar_salvados') }}";
+    }
+});
+</script>
+
+<!-- Container para tabela -->
 <div class="table-responsive  container mt-4">
     <table class="table table-striped table-hover">
         <thead class="table-dark">
@@ -40,4 +64,5 @@
         </tbody>
     </table>
 </div>
+
 {% endblock %}

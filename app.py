@@ -13,10 +13,7 @@ from infra.configs.connection import DBConecctionHandleMaster
 from infra.configs.connection import DBConecctionHandleMasterAutocommit
 from infra.configs.connection import DBConecctionHandleApp
 from sqlalchemy import text
-
-# install sqlalchemy
-# install pyodbc
-
+from sqlalchemy_utils import database_exists, create_database
 
 app = Flask(__name__)
 
@@ -47,28 +44,14 @@ app.jinja_env.filters['currency'] = currency_filter
 
 
 conn_master_handle = DBConecctionHandleMaster()
+engine_master = conn_master_handle.get_engine_master()
 conn_master_autocommit_handle = DBConecctionHandleMasterAutocommit()
+engine_master_autocommit = conn_master_autocommit_handle.get_engine_master()
 
-try:
-    with conn_master_handle as conn_master:
-        print("Conectado ao banco 'MASTER'.")
-        result = conn_master.session.execute(
-            text("SELECT DB_ID('salvados')"))
-        db_exists = result.scalar() is not None
-        print(
-            f"O banco 'salvados' {'existe' if db_exists else 'não existe'}.")
-        # Se o banco não existe, nós o criamos.
-        if not db_exists:
-            print("Banco de dados 'salvados' não encontrado. Criando...")
+if not database_exists(engine_master.url.set(database="salvados")):
+    create_database(
+        engine_master_autocommit.url.set(database="salvados"))
 
-            with conn_master_autocommit_handle as conn_master_autocommit:
-                conn_master_autocommit.session.execute(
-                    text("CREATE DATABASE salvados"))
-                print("Banco de dados 'salvados' criado com sucesso!")
-
-except Exception as ex:
-    print(f"Erro ao verificar/criar o banco de dados: {ex}")
-    exit()
 
 conn_app_handle = DBConecctionHandleApp()
 
@@ -87,6 +70,7 @@ Salvado.__table__.create(engine_app, checkfirst=True)
 # Criando a tabela 'status_opcoes' explicitamente se não existir
 StatusOpcao.__table__.create(engine_app, checkfirst=True)
 
+# Inicializando repositórios para utilizar os metodos existentes nas rotas
 salvado_repo = SalvadoRepository()
 status_repo = StatusOpcaoRepository()
 analista_repo = AnalistaRepository()
@@ -106,6 +90,8 @@ def salvado():
     leiloeiros_opcoes = [l.nome for l in leiloeiro_repo.get_all_leiloeiros()]
     errors = {}
     form_data = {}
+    erro_modal = None
+
     if request.method == 'POST':
         # Adapte para pegar os campos do formulário
         form_data = {key: request.form.get(
@@ -127,7 +113,12 @@ def salvado():
                         form_data[key] = None
                 else:
                     form_data[key] = None
-            salvado_repo.add_salvado(**form_data)
+            sucesso = salvado_repo.add_salvado(**form_data)
+            if not sucesso:
+                erro_modal = "Já Existe Salvado Cadastrado com esta Placa!"
+                return render_template('salvado_form.html', status_opcoes=status_opcoes, analistas_opcoes=analistas_opcoes,
+                                       leiloeiros_opcoes=leiloeiros_opcoes, salvado=None, form_data=form_data, errors=errors,
+                                       error_messages=[], erro_modal=erro_modal)
             return redirect(url_for('index'))
         error_messages = [field for field in errors.keys()]
         return render_template('salvado_form.html', status_opcoes=status_opcoes, analistas_opcoes=analistas_opcoes,
@@ -135,7 +126,7 @@ def salvado():
                                error_messages=error_messages)
     return render_template('salvado_form.html', status_opcoes=status_opcoes, analistas_opcoes=analistas_opcoes,
                            leiloeiros_opcoes=leiloeiros_opcoes, salvado=None, form_data=form_data, errors=errors,
-                           error_messages=[])
+                           error_messages=[], erro_modal=erro_modal)
 
 
 @app.route('/detalhes/<int:id>')
@@ -180,6 +171,8 @@ def atualizar(id):
 @app.route('/exportar_salvados')
 def exportar_salvados():
     salvados = salvado_repo.get_all_salvados()
+    if not salvados:
+        return redirect(url_for('index', msg='Não existem salvados cadastrados.'))
     # Gere o CSV
     csv_data = "id,status,sinistro,apolice,analista_responsavel,data_entrada_salvado\n"
     for s in salvados:
@@ -194,11 +187,15 @@ def exportar_salvados():
 @app.route('/gerenciar', methods=['GET', 'POST'])
 def gerenciar():
     secao = request.args.get('secao', 'status')
+    erro_modal = None
+
     if request.method == 'POST':
         acao = request.form['acao']
         if secao == 'status':
             if acao == 'inserir':
-                status_repo.add_status(request.form['novo_status'])
+                sucesso = status_repo.add_status(request.form['novo_status'])
+                if not sucesso:
+                    erro_modal = "Status já Cadastrado!"
             elif acao == 'excluir':
                 status_repo.delete_status(request.form['status_id'])
             elif acao == 'alterar':
@@ -206,8 +203,10 @@ def gerenciar():
                     request.form['status_id'], request.form['novo_nome'])
         elif secao == 'analistas':
             if acao == 'inserir':
-                analista_repo.add_analista(
+                sucesso = analista_repo.add_analista(
                     request.form['nome'], request.form['email'], request.form['cargo'])
+                if not sucesso:
+                    erro_modal = "Analista já cadastrado!"
             elif acao == 'excluir':
                 analista_repo.delete_analista(request.form['analista_id'])
             elif acao == 'alterar':
@@ -215,9 +214,11 @@ def gerenciar():
                     request.form['analista_id'], request.form['nome'], request.form['email'], request.form['cargo'])
         elif secao == 'leiloeiros':
             if acao == 'inserir':
-                leiloeiro_repo.add_leiloeiro(
+                sucesso = leiloeiro_repo.add_leiloeiro(
                     request.form['nome'], request.form['endereco'], request.form['telefone'],
                     request.form['responsavel'], request.form['email'])
+                if not sucesso:
+                    erro_modal = "Leiloeiro já Cadastrado!"
             elif acao == 'excluir':
                 leiloeiro_repo.delete_leiloeiro(request.form['leiloeiro_id'])
             elif acao == 'alterar':
@@ -231,7 +232,7 @@ def gerenciar():
     leiloeiros = [(l.id, l.nome, l.endereco, l.telefone, l.responsavel, l.email)
                   for l in leiloeiro_repo.get_all_leiloeiros()]
     return render_template('gerenciar.html', status_opcoes=status_opcoes, analistas=analistas,
-                           leiloeiros=leiloeiros, secao=secao)
+                           leiloeiros=leiloeiros, secao=secao, erro_modal=erro_modal)
 
 
 if __name__ == '__main__':

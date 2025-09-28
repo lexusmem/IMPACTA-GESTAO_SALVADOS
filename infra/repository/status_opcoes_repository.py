@@ -6,9 +6,14 @@ from sqlalchemy import text
 class StatusOpcaoRepository:
     def add_status(self, nome):
         with DBConecctionHandleApp() as db:
+            existente = db.session.query(StatusOpcao).filter(
+                StatusOpcao.nome == nome).first()
+            if existente:
+                return False
             status = StatusOpcao(nome=nome)
             db.session.add(status)
             db.session.commit()
+            return True
 
     def get_all_status_opcoes(self):
         with DBConecctionHandleApp() as db:

@@ -6,10 +6,15 @@ from sqlalchemy import text
 class LeiloeiroRepository:
     def add_leiloeiro(self, nome, endereco, telefone, responsavel, email):
         with DBConecctionHandleApp() as db:
+            existente = db.session.query(
+                Leiloeiro).filter(Leiloeiro.nome == nome).first()
+            if existente:
+                return False
             leiloeiro = Leiloeiro(nome=nome, endereco=endereco,
                                   telefone=telefone, responsavel=responsavel, email=email)
             db.session.add(leiloeiro)
             db.session.commit()
+            return True
 
     def get_all_leiloeiros(self):
         with DBConecctionHandleApp() as db:

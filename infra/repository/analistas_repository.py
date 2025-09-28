@@ -6,9 +6,14 @@ from sqlalchemy import text
 class AnalistaRepository:
     def add_analista(self, nome, email, cargo):
         with DBConecctionHandleApp() as db:
+            existente = db.session.query(Analista).filter(
+                Analista.nome == nome).first()
+            if existente:
+                return False
             analista = Analista(nome=nome, email=email, cargo=cargo)
             db.session.add(analista)
             db.session.commit()
+            return True
 
     def get_all_analistas(self):
         with DBConecctionHandleApp() as db:

@@ -6,9 +6,14 @@ from sqlalchemy import text
 class SalvadoRepository:
     def add_salvado(self, **kwargs):
         with DBConecctionHandleApp() as db:
+            existente = db.session.query(Salvado).filter(
+                Salvado.placa == kwargs.get('placa')).first()
+            if existente:
+                return False
             salvado = Salvado(**kwargs)
             db.session.add(salvado)
             db.session.commit()
+            return True
 
     def get_columns(self):
         return [column.name for column in Salvado.__table__.columns if column.name != 'id']
