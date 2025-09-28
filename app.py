@@ -12,7 +12,6 @@ from infra.entities.status_opcao import StatusOpcao
 from infra.configs.connection import DBConecctionHandleMaster
 from infra.configs.connection import DBConecctionHandleMasterAutocommit
 from infra.configs.connection import DBConecctionHandleApp
-from sqlalchemy import text
 from sqlalchemy_utils import database_exists, create_database
 
 app = Flask(__name__)
