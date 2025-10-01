@@ -5,7 +5,11 @@
 {% if erro_modal %}
 <div id="modal-alerta" class="modal">
     <div class="modal-content">
+        {% if sucesso %}
+        <h3 style="margin-top:0;">Cadastrado</h3>
+        {% else %}
         <h3 style="margin-top:0;">Erro</h3>
+        {% endif %}
         <p>{{ erro_modal }}</p>
         <button class="btn-modal-ok" onclick="document.getElementById('modal-alerta').style.display='none'">OK</button>
     </div>

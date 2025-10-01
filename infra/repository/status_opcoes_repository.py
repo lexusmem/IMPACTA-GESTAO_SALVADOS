@@ -26,9 +26,16 @@ class StatusOpcaoRepository:
 
     def update_status(self, status_id, novo_nome):
         with DBConecctionHandleApp() as db:
+            existente = db.session.query(StatusOpcao).filter(
+                StatusOpcao.nome == novo_nome,
+                StatusOpcao.id != status_id
+            ).first()
+            if existente:
+                return False
             db.session.query(StatusOpcao).filter(
                 StatusOpcao.id == status_id).update({"nome": novo_nome})
             db.session.commit()
+            return True
 
     def delete_status(self, status_id):
         with DBConecctionHandleApp() as db:

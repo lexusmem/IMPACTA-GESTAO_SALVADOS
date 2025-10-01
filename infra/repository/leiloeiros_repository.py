@@ -22,10 +22,17 @@ class LeiloeiroRepository:
 
     def update_leiloeiro(self, leiloeiro_id, nome, endereco, telefone, responsavel, email):
         with DBConecctionHandleApp() as db:
+            existente = db.session.query(Leiloeiro).filter(
+                Leiloeiro.nome == nome,
+                Leiloeiro.id != leiloeiro_id
+            ).first()
+            if existente:
+                return False
             db.session.query(Leiloeiro).filter(Leiloeiro.id == leiloeiro_id).update({
                 "nome": nome, "endereco": endereco, "telefone": telefone, "responsavel": responsavel, "email": email
             })
             db.session.commit()
+            return True
 
     def delete_leiloeiro(self, leiloeiro_id):
         with DBConecctionHandleApp() as db:

@@ -285,7 +285,8 @@
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label">Analista Responsável</label>
-                <select class="form-select" name="analista_responsavel">
+                <select class="form-select {% if errors.analista_responsavel %}is-invalid{% endif %}"
+                    name="analista_responsavel">
                     <option value="" {% if (not salvado and not form_data.analista_responsavel) or (salvado and
                         salvado.analista_responsavel=='' ) or (form_data and form_data.analista_responsavel=='' )
                         %}selected{% endif %}>Selecione</option>

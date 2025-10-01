@@ -28,9 +28,16 @@ class SalvadoRepository:
 
     def update_salvado(self, salvado_id, **kwargs):
         with DBConecctionHandleApp() as db:
+            existente = db.session.query(Salvado).filter(
+                Salvado.placa == kwargs.get('placa'),
+                Salvado.id != salvado_id
+            ).first()
+            if existente:
+                return False
             db.session.query(Salvado).filter(
                 Salvado.id == salvado_id).update(kwargs)
             db.session.commit()
+            return True
 
     def deletar_salvado(self, salvado_id):
         with DBConecctionHandleApp() as db:

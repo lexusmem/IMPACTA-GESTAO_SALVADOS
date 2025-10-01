@@ -21,9 +21,16 @@ class AnalistaRepository:
 
     def update_analista(self, analista_id, nome, email, cargo):
         with DBConecctionHandleApp() as db:
+            existente = db.session.query(Analista).filter(
+                Analista.nome == nome,
+                Analista.id != analista_id
+            ).first()
+            if existente:
+                return False
             db.session.query(Analista).filter(Analista.id == analista_id).update(
                 {"nome": nome, "email": email, "cargo": cargo})
             db.session.commit()
+            return True
 
     def delete_analista(self, analista_id):
         with DBConecctionHandleApp() as db:
