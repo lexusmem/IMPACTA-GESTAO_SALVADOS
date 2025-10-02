@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for
-from datetime import datetime
 from flask import Response
 from infra.repository.analistas_repository import AnalistaRepository
 from infra.repository.leiloeiros_repository import LeiloeiroRepository
@@ -14,29 +13,9 @@ from infra.configs.connection import DBConecctionHandleMasterAutocommit
 from infra.configs.connection import DBConecctionHandleApp
 from sqlalchemy import text
 from sqlalchemy_utils import database_exists, create_database
+from infra.utils.formatters import strftime_filter, currency_filter
 
 app = Flask(__name__)
-
-
-def strftime_filter(value, format_string):
-    if value and isinstance(value, (datetime, str)):
-        if isinstance(value, str):
-            try:
-                value = datetime.strptime(value, '%Y-%m-%d')
-            except ValueError:
-                return value
-        return value.strftime(format_string)
-    return ''
-
-
-def currency_filter(value):
-    if value is None or value == '':
-        return ''
-    try:
-        value = float(value)
-        return f"R$ {value:,.2f}".replace('.', '#').replace(',', '.').replace('#', ',')
-    except (ValueError, TypeError):
-        return value
 
 
 app.jinja_env.filters['strftime'] = strftime_filter
@@ -115,6 +94,7 @@ def salvado():
                 else:
                     form_data[key] = None
             sucesso = salvado_repo.add_salvado(**form_data)
+
             if not sucesso:
                 erro_modal = "Já Existe Salvado Cadastrado com esta Placa!"
                 return render_template('salvado_form.html', status_opcoes=status_opcoes, analistas_opcoes=analistas_opcoes,
