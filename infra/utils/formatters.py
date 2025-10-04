@@ -1,9 +1,9 @@
-from datetime import datetime
+from datetime import datetime, date
 
 
 # Função que recebe uma data e um formato, retornando a data formatada
 def strftime_filter(value, format_string):
-    if value and isinstance(value, (datetime, str)):
+    if value and isinstance(value, (datetime, date, str)):
         if isinstance(value, str):
             try:
                 value = datetime.strptime(value, '%Y-%m-%d')

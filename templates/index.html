@@ -4,10 +4,19 @@
 <!-- Container para botão lista de salvados -->
 <div class="container mt-4 d-flex justify-content-between align-items-center">
     <h2 class="mb-0">Lista de Salvados</h2>
-    <button id="btnExportar" class="btn btn-success">
+    <button type="button" id="btnExportar" class="btn btn-success">
         📥 Exportar Salvados
     </button>
 </div>
+
+<!-- Script para exportar salvados -->
+<script>
+    document.getElementById('btnExportar').addEventListener('click', function () {
+        // Pega os parâmetros do formulário
+        const params = new URLSearchParams(new FormData(document.querySelector('form')));
+        window.location.href = "{{ url_for('exportar_salvados') }}?" + params.toString();
+    });
+</script>
 
 <!-- Container para alerta -->
 <div id="alerta-salvados" class="container mt-4" style="display:none;">
@@ -16,70 +25,67 @@
     </div>
 </div>
 
-<!-- Script para exportar salvados -->
-<script>
-    document.getElementById('btnExportar').addEventListener('click', function () {
-        var salvadosCount = {{ salvados| length
-    }};
-    if (salvadosCount === 0) {
-        document.getElementById('alerta-salvados').style.display = 'block';
-    } else {
-        window.location.href = "{{ url_for('exportar_salvados') }}";
-    }
-});
-</script>
 
-<!-- Container para filtros 2 -->
+<!-- Container para filtros -->
 <div class="table-responsive  container mt-4">
     <form class="row g-3">
         <div class="col-md-3">
             <label for="inputSinistro" class="form-label">Sinistro</label>
-            <input type="number" class="form-control" id="inputSinistro" name="sinistro" placeholder="">
+            <input type="number" class="form-control" id="inputSinistro" name="sinistro" placeholder=""
+                value="{{ request.args.get('sinistro', '') }}">
         </div>
         <div class="col-md-3">
             <label for="inputPlaca" class="form-label">Placa</label>
-            <input type="text" class="form-control" id="inputPlaca" name="placa" placeholder="">
+            <input type="text" class="form-control" id="inputPlaca" name="placa" placeholder=""
+                value="{{ request.args.get('placa', '') }}">
         </div>
         <div class="col-md-3">
             <label for="inputApolice" class="form-label">Apólice</label>
-            <input type="number" class="form-control" id="inputApolice" name="apolice" placeholder="">
+            <input type="number" class="form-control" id="inputApolice" name="apolice" placeholder=""
+                value="{{ request.args.get('apolice', '') }}">
         </div>
         <!-- Segunda Linha -->
         <div class="col-md-3">
             <label for="inputSegurado" class="form-label">Segurado</label>
-            <input type="text" class="form-control" id="inputSegurado" name="segurado" placeholder="">
+            <input type="text" class="form-control" id="inputSegurado" name="segurado" placeholder=""
+                value="{{ request.args.get('segurado', '') }}">
         </div>
 
         <div class="col-md-3">
             <label for="inputAnalista" class="form-label">Analista</label>
             <select id="inputAnalista" class="form-select" name="analista">
-                <option selected value="">Selecione</option>
+                <!-- <option selected value="">Selecione</option> -->
+                <option value="">Selecione</option>
                 {% for analista in analistas_opcoes %}
-                <option value="{{ analista }}">{{ analista }}</option>
+                <option value="{{ analista }}" {% if request.args.get('analista')==analista %}selected{% endif %}>{{
+                    analista }}</option>
                 {% endfor %}
             </select>
         </div>
         <div class="col-md-3">
             <label for="inputLeiloeiro" class="form-label">Leiloeiro</label>
             <select class="form-select" name="leiloeiro" id="inputLeiloeiro">
-                <option selected value="">Selecione</option>
+                <option value="">Selecione</option>
                 {% for leiloeiro in leiloeiros_opcoes %}
-                <option value="{{ leiloeiro }}">{{ leiloeiro }}</option>
+                <option value="{{ leiloeiro }}" {% if request.args.get('leiloeiro')==leiloeiro %}selected{% endif %}>{{
+                    leiloeiro }}</option>
                 {% endfor %}
             </select>
         </div>
         <div class="col-md-3">
             <label for="inputStatus" class="form-label">Status</label>
             <select id="inputStatus" class="form-select" name="status">
-                <option selected value="">Selecione</option>
+                <option value="">Selecione</option>
                 {% for status in status_opcoes %}
-                <option value="{{ status }}">{{ status }}</option>
+                <option value="{{ status }}" {% if request.args.get('status')==status %}selected{% endif %}>{{
+                    status }}</option>
                 {% endfor %}
             </select>
         </div>
         <div class="col-md-3">
             <label for="inputTerceiro" class="form-label">Terceiro</label>
-            <input type="text" class="form-control" id="inputTerceiro" name="terceiro" placeholder="">
+            <input type="text" class="form-control" id="inputTerceiro" name="terceiro" placeholder=""
+                value="{{ request.args.get('terceiro', '') }}">
         </div>
 
         <!-- Div para os botões -->
@@ -87,13 +93,12 @@
             <!-- Botão de Submit Filtrar -->
             <button type="submit" class="btn btn-primary">Filtrar</button>
             <!-- Botão de Submit Limpar -->
-            <button type="reset" class="btn btn-secondary">Limpar Filtros</button>
+            <button type="button" class="btn btn-secondary"
+                onclick="window.location.href='{{ url_for('index') }}'">Limpar Filtros</button>
         </div>
     </form>
 </div>
-
-<!-- Fim Container para filtros 2 -->
-
+<!-- Fim Container para filtros -->
 
 <!-- Container para tabela -->
 <div class="table-responsive  container mt-5">
@@ -104,9 +109,9 @@
                 <th>Sinistro</th>
                 <th>Placa</th>
                 <th>Analista</th>
-                <th>Data Salvado</th>
-                <th>Ações</th>
-                <th>Status</th>
+                <th>Data Recebimento</th>
+                <th>Status Salvado</th>
+                <th>Ação</th>
             </tr>
         </thead>
         <tbody>
@@ -116,7 +121,7 @@
                 <td>{{ salvado.sinistro }}</td>
                 <td>{{ salvado.placa }}</td>
                 <td>{{ salvado.analista_responsavel }}</td>
-                <td>{{ salvado.data_recebimento_salvado|strftime('%d/%m/%Y') }}</td>
+                <td>{{ salvado.data_recebimento_salvado|default('')|strftime('%d/%m/%Y') }}</td>
                 <td>
                     <span
                         class="badge bg-{{ 'success' if salvado.status == 'Finalizado' else 'danger' if salvado.status == 'Cancelado' else 'primary' }}">{{

@@ -58,7 +58,17 @@ leiloeiro_repo = LeiloeiroRepository()
 
 @app.route('/')
 def index():
-    salvados = salvado_repo.get_all_salvados()
+    filtros = {
+        'sinistro': request.args.get('sinistro'),
+        'placa': request.args.get('placa'),
+        'apolice': request.args.get('apolice'),
+        'nome_segurado': request.args.get('segurado'),
+        'analista_responsavel': request.args.get('analista'),
+        'leiloeiro': request.args.get('leiloeiro'),
+        'status': request.args.get('status'),
+        'nome_terceiro': request.args.get('terceiro')
+    }
+    salvados = salvado_repo.get_salvados_filtrados(**filtros)
     status_opcoes = [s.nome for s in status_repo.get_all_status_opcoes()]
     analistas_opcoes = [a.nome for a in analista_repo.get_all_analistas()]
     leiloeiros_opcoes = [l.nome for l in leiloeiro_repo.get_all_leiloeiros()]
@@ -166,13 +176,23 @@ def atualizar(id):
 
 @app.route('/exportar_salvados')
 def exportar_salvados():
-    salvados = salvado_repo.get_all_salvados()
+    filtros = {
+        'sinistro': request.args.get('sinistro'),
+        'placa': request.args.get('placa'),
+        'apolice': request.args.get('apolice'),
+        'nome_segurado': request.args.get('segurado'),
+        'analista_responsavel': request.args.get('analista'),
+        'leiloeiro': request.args.get('leiloeiro'),
+        'status': request.args.get('status'),
+        'nome_terceiro': request.args.get('terceiro')
+    }
+    salvados = salvado_repo.get_salvados_filtrados(**filtros)
     if not salvados:
         return redirect(url_for('index', msg='Não existem salvados cadastrados.'))
     # Gere o CSV
-    csv_data = "id,status,sinistro,apolice,analista_responsavel,data_entrada_salvado\n"
+    csv_data = "id,status,sinistro,apolice,analista_responsavel,data_entrada_salvado,placa\n"
     for s in salvados:
-        csv_data += f"{s.id},{s.status},{s.sinistro},{s.apolice},{s.analista_responsavel},{s.data_recebimento_salvado}\n"
+        csv_data += f"{s.id},{s.status},{s.sinistro},{s.apolice},{s.analista_responsavel},{s.data_recebimento_salvado},{s.placa}\n"
     return Response(
         csv_data,
         mimetype="text/csv",

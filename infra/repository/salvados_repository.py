@@ -22,6 +22,15 @@ class SalvadoRepository:
         with DBConecctionHandleApp() as db:
             return db.session.query(Salvado).all()
 
+    def get_salvados_filtrados(self, **filtros):
+        with DBConecctionHandleApp() as db:
+            query = db.session.query(Salvado)
+            for campo, valor in filtros.items():
+                if valor:
+                    query = query.filter(
+                        getattr(Salvado, campo).ilike(f"%{valor}%"))
+            return query.all()
+
     def get_salvado_by_id(self, salvado_id):
         with DBConecctionHandleApp() as db:
             return db.session.query(Salvado).filter(Salvado.id == salvado_id).first()
