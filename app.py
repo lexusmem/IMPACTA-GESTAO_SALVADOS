@@ -59,7 +59,11 @@ leiloeiro_repo = LeiloeiroRepository()
 @app.route('/')
 def index():
     salvados = salvado_repo.get_all_salvados()
-    return render_template('index.html', salvados=salvados)
+    status_opcoes = [s.nome for s in status_repo.get_all_status_opcoes()]
+    analistas_opcoes = [a.nome for a in analista_repo.get_all_analistas()]
+    leiloeiros_opcoes = [l.nome for l in leiloeiro_repo.get_all_leiloeiros()]
+    return render_template('index.html', salvados=salvados, status_opcoes=status_opcoes,
+                           analistas_opcoes=analistas_opcoes, leiloeiros_opcoes=leiloeiros_opcoes)
 
 
 @app.route('/salvado', methods=['GET', 'POST'])
