@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 
+<!-- Modal de alerta -->
+{% if erro_modal %}
+<div id="modal-alerta" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-top:0;">Atenção</h3>
+        <p>{{ erro_modal }}</p>
+        <button class="btn-modal-ok" onclick="document.getElementById('modal-alerta').style.display='none'">OK</button>
+    </div>
+</div>
+{% endif %}
+
 <!-- Container para botão lista de salvados -->
 <div class="container mt-4 d-flex justify-content-between align-items-center">
     <h2 class="mb-0">Lista de Salvados</h2>

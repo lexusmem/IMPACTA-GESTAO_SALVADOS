@@ -58,6 +58,7 @@ leiloeiro_repo = LeiloeiroRepository()
 
 @app.route('/')
 def index():
+    erro_modal = request.args.get('erro_modal')
     filtros = {
         'sinistro': request.args.get('sinistro'),
         'placa': request.args.get('placa'),
@@ -69,11 +70,17 @@ def index():
         'nome_terceiro': request.args.get('terceiro')
     }
     salvados = salvado_repo.get_salvados_filtrados(**filtros)
+
+    possui_filtro = any(f for f in filtros.values() if f is not None)
+
+    if not salvados and possui_filtro:
+        erro_modal = "Não existem salvados para o filtro aplicado."
+
     status_opcoes = [s.nome for s in status_repo.get_all_status_opcoes()]
     analistas_opcoes = [a.nome for a in analista_repo.get_all_analistas()]
     leiloeiros_opcoes = [l.nome for l in leiloeiro_repo.get_all_leiloeiros()]
     return render_template('index.html', salvados=salvados, status_opcoes=status_opcoes,
-                           analistas_opcoes=analistas_opcoes, leiloeiros_opcoes=leiloeiros_opcoes)
+                           analistas_opcoes=analistas_opcoes, leiloeiros_opcoes=leiloeiros_opcoes, erro_modal=erro_modal)
 
 
 @app.route('/salvado', methods=['GET', 'POST'])
@@ -188,7 +195,12 @@ def exportar_salvados():
     }
     salvados = salvado_repo.get_salvados_filtrados(**filtros)
     if not salvados:
-        return redirect(url_for('index', msg='Não existem salvados cadastrados.'))
+        possui_filtro = any(f for f in filtros.values() if f is not None)
+        if possui_filtro:
+            mensagem_retorno_erro = "Não existem salvados para o filtro aplicado."
+        else:
+            mensagem_retorno_erro = "Não existem salvados cadastrado no BD para exportação."
+        return redirect(url_for('index', erro_modal=mensagem_retorno_erro))
     # Gere o CSV
     csv_data = "id,status,sinistro,apolice,analista_responsavel,data_entrada_salvado,placa\n"
     for s in salvados:
