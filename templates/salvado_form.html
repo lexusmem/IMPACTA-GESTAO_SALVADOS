@@ -12,48 +12,32 @@
 </div>
 {% endif %}
 
+<!-- Titulo da Página -->
 <h2 class="mb-4  container mt-4">{% if salvado %}Atualizar Salvado{% else %}Adicionar Salvado{% endif %}</h2>
+
+<!-- Container para mensagem de erro -->
 {% if errors %}
 <div class="alert alert-danger  container mt-4">
     Preencha os campos obrigatórios! Campos com erro: {{ error_messages|join(', ') }}
 </div>
 {% endif %}
-<div class="card p-4 shadow-sm  container mt-4">
-    <form method="POST"
-        action="{% if salvado %}{{ url_for('atualizar', id=salvado.id) }}{% else %}{{ url_for('salvado') }}{% endif %}"
-        id="salvadoForm">
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Status</label>
-                <select class="form-select {% if errors.status %}is-invalid{% endif %}" name="status">
-                    <option value="" {% if not salvado and not form_data.status %}selected{% endif %}>Selecione</option>
-                    {% for status in status_opcoes %}
-                    <option value="{{ status }}" {% if (salvado and salvado.status==status) or (form_data and
-                        form_data.status==status) %}selected{% endif %}>{{ status }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Sinistro</label>
-                <input type="text" class="form-control {% if errors.sinistro %}is-invalid{% endif %}" name="sinistro"
-                    value="{{ salvado.sinistro if salvado else form_data.sinistro if form_data else '' }}">
-            </div>
+
+<!-- Formulário de salvado -->
+
+<form method="POST"
+    action="{% if salvado %}{{ url_for('atualizar', id=salvado.id) }}{% else %}{{ url_for('salvado') }}{% endif %}"
+    id="salvadoForm">
+
+    <!-- Container Segurado -->
+    <div class="card p-4 shadow-sm  container mt-4">
+        <div class="row mb-2">
+            <h4 class="col-md-12">Segurado</h4>
+        </div>
+        <div class="row mb-2">
             <div class="col-md-6 mb-3">
                 <label class="form-label">Apólice</label>
                 <input type="text" class="form-control {% if errors.apolice %}is-invalid{% endif %}" name="apolice"
                     value="{{ salvado.apolice if salvado else form_data.apolice if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data Recebimento Salvado</label>
-                <input type="date" class="form-control {% if errors.data_recebimento_salvado %}is-invalid{% endif %}"
-                    name="data_recebimento_salvado"
-                    value="{{ salvado.data_recebimento_salvado if salvado else form_data.data_recebimento_salvado if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data Pedido Cotação Remoção</label>
-                <input type="date" class="form-control {% if errors.data_pedido_cotacao_remocao %}is-invalid{% endif %}"
-                    name="data_pedido_cotacao_remocao"
-                    value="{{ salvado.data_pedido_cotacao_remocao if salvado else form_data.data_pedido_cotacao_remocao if form_data else '' }}">
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label">Nome Segurado</label>
@@ -61,17 +45,40 @@
                     name="nome_segurado"
                     value="{{ salvado.nome_segurado if salvado else form_data.nome_segurado if form_data else '' }}">
             </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Sinistro</label>
+                <input type="text" class="form-control {% if errors.sinistro %}is-invalid{% endif %}" name="sinistro"
+                    value="{{ salvado.sinistro if salvado else form_data.sinistro if form_data else '' }}">
+            </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label">Nome Terceiro</label>
                 <input type="text" class="form-control {% if errors.nome_terceiro %}is-invalid{% endif %}"
                     name="nome_terceiro"
                     value="{{ salvado.nome_terceiro if salvado else form_data.nome_terceiro if form_data else '' }}">
             </div>
+        </div>
+    </div>
+
+    <!-- Container Veículo Salvado -->
+    <div class="card p-4 shadow-sm container mt-4">
+        <div class="row mb-2">
+            <h4 class="col-md-12">Veículo Salvado</h4>
+        </div>
+        <div class="row mb-2">
             <div class="col-md-6 mb-3">
                 <label class="form-label">Placa</label>
                 <input type="text" class="form-control {% if errors.placa %}is-invalid{% endif %}" name="placa"
                     value="{{ salvado.placa if salvado else form_data.placa if form_data else '' }}">
             </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Chassi</label>
+                <input type="text" class="form-control {% if errors.chassi %}is-invalid{% endif %}" name="chassi"
+                    value="{{ salvado.chassi if salvado else form_data.chassi if form_data else '' }}">
+            </div>
+        </div>
+        <div class="row mb-2">
             <div class="col-md-6 mb-3">
                 <label class="form-label">Marca</label>
                 <input type="text" class="form-control {% if errors.marca %}is-invalid{% endif %}" name="marca"
@@ -82,6 +89,8 @@
                 <input type="text" class="form-control {% if errors.modelo %}is-invalid{% endif %}" name="modelo"
                     value="{{ salvado.modelo if salvado else form_data.modelo if form_data else '' }}">
             </div>
+        </div>
+        <div class="row mb-2">
             <div class="col-md-6 mb-3">
                 <label class="form-label">Ano/Modelo</label>
                 <input type="text" class="form-control {% if errors.ano %}is-invalid{% endif %}" name="ano"
@@ -93,6 +102,8 @@
                 <input type="text" class="form-control" name="n_fipe"
                     value="{{ salvado.n_fipe if salvado else form_data.n_fipe if form_data else '' }}">
             </div>
+        </div>
+        <div class="row mb-2">
             <div class="col-md-6 mb-3">
                 <label class="form-label">Valor FIPE</label>
                 <input type="text" class="form-control currency" name="valor_fipe"
@@ -104,6 +115,15 @@
                     value="{{ salvado.mes_ano_ref_fipe if salvado else form_data.mes_ano_ref_fipe if form_data else '' }}"
                     placeholder="mm/aaaa">
             </div>
+        </div>
+    </div>
+
+    <!-- Container Leiloeiro -->
+    <div class="card p-4 shadow-sm  container mt-4">
+        <div class="row mb-2">
+            <h4 class="col-md-12">Leiloeiro</h4>
+        </div>
+        <div class="row mb-2">
             <div class="col-md-6 mb-3">
                 <label class="form-label">Leiloeiro</label>
                 <select class="form-select" name="leiloeiro">
@@ -121,166 +141,45 @@
                 <input type="text" class="form-control" name="status_remocao_leiloeiro"
                     value="{{ salvado.status_remocao_leiloeiro if salvado else form_data.status_remocao_leiloeiro if form_data else '' }}">
             </div>
+        </div>
+
+        <div class="row mb-2">
             <div class="col-md-6 mb-3">
-                <label class="form-label">Local Atual Veículo</label>
-                <input type="text" class="form-control" name="local_atual_veiculo"
-                    value="{{ salvado.local_atual_veiculo if salvado else form_data.local_atual_veiculo if form_data else '' }}">
+                <label class="form-label">Data Pedido Cotação Remoção</label>
+                <input type="date" class="form-control {% if errors.data_pedido_cotacao_remocao %}is-invalid{% endif %}"
+                    name="data_pedido_cotacao_remocao"
+                    value="{{ salvado.data_pedido_cotacao_remocao if salvado else form_data.data_pedido_cotacao_remocao if form_data else '' }}">
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label">Data Entrada Pátio Leiloeiro</label>
                 <input type="date" class="form-control" name="data_entrada_patio_leiloeiro"
                     value="{{ salvado.data_entrada_patio_leiloeiro if salvado else form_data.data_entrada_patio_leiloeiro if form_data else '' }}">
             </div>
+        </div>
+        <div class="row mb-2">
             <div class="col-md-6 mb-3">
-                <label class="form-label">Vistorias Solicitada - Monta</label>
-                <input type="date" class="form-control" name="vistorias_solicitada_monta"
-                    value="{{ salvado.vistorias_solicitada_monta if salvado else form_data.vistorias_solicitada_monta if form_data else '' }}">
+                <label class="form-label">Local Atual Veículo (Pátio - UF)</label>
+                <input type="text" class="form-control" name="local_atual_veiculo"
+                    value="{{ salvado.local_atual_veiculo if salvado else form_data.local_atual_veiculo if form_data else '' }}">
             </div>
+        </div>
+    </div>
+
+
+    <!-- Container Salvado -->
+    <div class="card p-4 shadow-sm  container mt-4">
+        <div class="row mb-2">
+            <h4 class="col-md-12">Salvado</h4>
+        </div>
+        <div class="row mb-2">
             <div class="col-md-6 mb-3">
-                <label class="form-label">Vistorias Recebidas - Monta</label>
-                <input type="date" class="form-control" name="vistorias_recebidas_monta"
-                    value="{{ salvado.vistorias_recebidas_monta if salvado else form_data.vistorias_recebidas_monta if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Vistorias Solicitada - ECV</label>
-                <input type="date" class="form-control" name="vistorias_solicitada_ecv"
-                    value="{{ salvado.vistorias_solicitada_ecv if salvado else form_data.vistorias_solicitada_ecv if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Vistorias Recebidas - ECV</label>
-                <input type="date" class="form-control" name="vistorias_recebidas_ecv"
-                    value="{{ salvado.vistorias_recebidas_ecv if salvado else form_data.vistorias_recebidas_ecv if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Classificação de Danos</label>
-                <input type="text" class="form-control" name="classificacao_danos"
-                    value="{{ salvado.classificacao_danos if salvado else form_data.classificacao_danos if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">ECV</label>
-                <input type="text" class="form-control" name="ecv"
-                    value="{{ salvado.ecv if salvado else form_data.ecv if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Valor Total da Indenização</label>
-                <input type="text" class="form-control currency" name="valor_total_indenizacao"
-                    value="{{ salvado.valor_total_indenizacao|currency if salvado and salvado.valor_total_indenizacao is not none else form_data.valor_total_indenizacao if form_data and form_data.valor_total_indenizacao else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Franquia - Outros Descontos</label>
-                <input type="text" class="form-control currency" name="franquia_outros_descontos"
-                    value="{{ salvado.franquia_outros_descontos|currency if salvado and salvado.franquia_outros_descontos is not none else form_data.franquia_outros_descontos if form_data and form_data.franquia_outros_descontos else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Valor Pago pela Cia</label>
-                <input type="text" class="form-control currency" name="valor_pago_pela_cia"
-                    value="{{ salvado.valor_pago_pela_cia|currency if salvado and salvado.valor_pago_pela_cia is not none else form_data.valor_pago_pela_cia if form_data and form_data.valor_pago_pela_cia else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data Pagto Indenização</label>
-                <input type="date" class="form-control" name="data_pagto_indenizacao"
-                    value="{{ salvado.data_pagto_indenizacao if salvado else form_data.data_pagto_indenizacao if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data Recebimento Docs para Emissão NF Entrada</label>
-                <input type="date" class="form-control" name="data_recebimento_docs_nf_entrada"
-                    value="{{ salvado.data_recebimento_docs_nf_entrada if salvado else form_data.data_recebimento_docs_nf_entrada if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data Solicitação NF Entrada</label>
-                <input type="date" class="form-control" name="data_solicitacao_nf_entrada"
-                    value="{{ salvado.data_solicitacao_nf_entrada if salvado else form_data.data_solicitacao_nf_entrada if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data Recebimento NF Entrada</label>
-                <input type="date" class="form-control" name="data_recebimento_nf_entrada"
-                    value="{{ salvado.data_recebimento_nf_entrada if salvado else form_data.data_recebimento_nf_entrada if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">N° NF Entrada</label>
-                <input type="text" class="form-control" name="n_nf_entrada"
-                    value="{{ salvado.n_nf_entrada if salvado else form_data.n_nf_entrada if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Valor NF Entrada</label>
-                <input type="text" class="form-control currency" name="valor_nf_entrada"
-                    value="{{ salvado.valor_nf_entrada|currency if salvado and salvado.valor_nf_entrada is not none else form_data.valor_nf_entrada if form_data and form_data.valor_nf_entrada else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data Solicitação NF Saída</label>
-                <input type="date" class="form-control" name="data_solicitacao_nf_saida"
-                    value="{{ salvado.data_solicitacao_nf_saida if salvado else form_data.data_solicitacao_nf_saida if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data Recebimento NF Saída</label>
-                <input type="date" class="form-control" name="data_recebimento_nf_saida"
-                    value="{{ salvado.data_recebimento_nf_saida if salvado else form_data.data_recebimento_nf_saida if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">N° NF Saída</label>
-                <input type="text" class="form-control" name="n_nf_saida"
-                    value="{{ salvado.n_nf_saida if salvado else form_data.n_nf_saida if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Valor NF Saída</label>
-                <input type="text" class="form-control currency" name="valor_nf_saida"
-                    value="{{ salvado.valor_nf_saida|currency if salvado and salvado.valor_nf_saida is not none else form_data.valor_nf_saida if form_data and form_data.valor_nf_saida else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data Solicitação Recorte Chassi</label>
-                <input type="date" class="form-control" name="data_solicitacao_recorte_chassi"
-                    value="{{ salvado.data_solicitacao_recorte_chassi if salvado else form_data.data_solicitacao_recorte_chassi if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data Recebimento Recorte Chassi</label>
-                <input type="date" class="form-control" name="data_recebimento_recorte_chassi"
-                    value="{{ salvado.data_recebimento_recorte_chassi if salvado else form_data.data_recebimento_recorte_chassi if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data Docs Disponível Despachante - Transf. Seguradora</label>
-                <input type="date" class="form-control" name="data_docs_disponivel_transf_seguradora"
-                    value="{{ salvado.data_docs_disponivel_transf_seguradora if salvado else form_data.data_docs_disponivel_transf_seguradora if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data Recebimento Docs Despachante - Transf. Seguradora</label>
-                <input type="date" class="form-control" name="data_recebimento_docs_transf_seguradora"
-                    value="{{ salvado.data_recebimento_docs_transf_seguradora if salvado else form_data.data_recebimento_docs_transf_seguradora if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data Venda do Salvado (Leilão)</label>
-                <input type="date" class="form-control" name="data_venda_salvado"
-                    value="{{ salvado.data_venda_salvado if salvado else form_data.data_venda_salvado if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Valor da Venda</label>
-                <input type="text" class="form-control currency" name="valor_venda"
-                    value="{{ salvado.valor_venda|currency if salvado and salvado.valor_venda is not none else form_data.valor_venda if form_data and form_data.valor_venda else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Nome Arrematante</label>
-                <input type="text" class="form-control" name="nome_arrematante"
-                    value="{{ salvado.nome_arrematante if salvado else form_data.nome_arrematante if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data Docs Disponível Despachante - Transf. Arrematante</label>
-                <input type="date" class="form-control" name="data_docs_disponivel_transf_arrematante"
-                    value="{{ salvado.data_docs_disponivel_transf_arrematante if salvado else form_data.data_docs_disponivel_transf_arrematante if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data Recebimento Docs Despachante - Transf. Arrematante</label>
-                <input type="date" class="form-control" name="data_recebimento_docs_transf_arrematante"
-                    value="{{ salvado.data_recebimento_docs_transf_arrematante if salvado else form_data.data_recebimento_docs_transf_arrematante if form_data else '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Doc Transferido ao Arrematante?</label>
-                <select class="form-select" name="doc_transferido_arrematante">
-                    <option value="" {% if (not salvado and not form_data.doc_transferido_arrematante) or (salvado and
-                        salvado.doc_transferido_arrematante=='' ) or (form_data and
-                        form_data.doc_transferido_arrematante=='' ) %}selected{% endif %}>Selecione</option>
-                    <option value="Sim" {% if (salvado and salvado.doc_transferido_arrematante=='Sim' ) or (form_data
-                        and form_data.doc_transferido_arrematante=='Sim' ) %}selected{% endif %}>Sim</option>
-                    <option value="Não" {% if (salvado and salvado.doc_transferido_arrematante=='Não' ) or (form_data
-                        and form_data.doc_transferido_arrematante=='Não' ) %}selected{% endif %}>Não</option>
+                <label class="form-label">Status do Salvado</label>
+                <select class="form-select {% if errors.status %}is-invalid{% endif %}" name="status">
+                    <option value="" {% if not salvado and not form_data.status %}selected{% endif %}>Selecione</option>
+                    {% for status in status_opcoes %}
+                    <option value="{{ status }}" {% if (salvado and salvado.status==status) or (form_data and
+                        form_data.status==status) %}selected{% endif %}>{{ status }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="col-md-6 mb-3">
@@ -297,18 +196,258 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-12 mb-3">
-                <label class="form-label">Histórico</label>
-                <textarea class="form-control" name="historico"
-                    rows="3">{{ salvado.historico if salvado else form_data.historico if form_data else '' }}</textarea>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data Recebimento Salvado</label>
+                <input type="date" class="form-control {% if errors.data_recebimento_salvado %}is-invalid{% endif %}"
+                    name="data_recebimento_salvado"
+                    value="{{ salvado.data_recebimento_salvado if salvado else form_data.data_recebimento_salvado if form_data else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Valor Total da Indenização</label>
+                <input type="text" class="form-control currency" name="valor_total_indenizacao"
+                    value="{{ salvado.valor_total_indenizacao|currency if salvado and salvado.valor_total_indenizacao is not none else form_data.valor_total_indenizacao if form_data and form_data.valor_total_indenizacao else '' }}">
             </div>
         </div>
+        <div class="row mb-2">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Franquia - Outros Descontos</label>
+                <input type="text" class="form-control currency" name="franquia_outros_descontos"
+                    value="{{ salvado.franquia_outros_descontos|currency if salvado and salvado.franquia_outros_descontos is not none else form_data.franquia_outros_descontos if form_data and form_data.franquia_outros_descontos else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Valor Pago pela Cia</label>
+                <input type="text" class="form-control currency" name="valor_pago_pela_cia"
+                    value="{{ salvado.valor_pago_pela_cia|currency if salvado and salvado.valor_pago_pela_cia is not none else form_data.valor_pago_pela_cia if form_data and form_data.valor_pago_pela_cia else '' }}">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data Pagto Indenização</label>
+                <input type="date" class="form-control" name="data_pagto_indenizacao"
+                    value="{{ salvado.data_pagto_indenizacao if salvado else form_data.data_pagto_indenizacao if form_data else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data Docs Disponível Despachante - Transf. Seguradora</label>
+                <input type="date" class="form-control" name="data_docs_disponivel_transf_seguradora"
+                    value="{{ salvado.data_docs_disponivel_transf_seguradora if salvado else form_data.data_docs_disponivel_transf_seguradora if form_data else '' }}">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data Transferência Propriedade para Seguradora</label>
+                <input type="date" class="form-control" name="data_recebimento_docs_transf_seguradora"
+                    value="{{ salvado.data_recebimento_docs_transf_seguradora if salvado else form_data.data_recebimento_docs_transf_seguradora if form_data else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data Solicitação Recorte Chassi</label>
+                <input type="date" class="form-control" name="data_solicitacao_recorte_chassi"
+                    value="{{ salvado.data_solicitacao_recorte_chassi if salvado else form_data.data_solicitacao_recorte_chassi if form_data else '' }}">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data Recebimento Recorte Chassi</label>
+                <input type="date" class="form-control" name="data_recebimento_recorte_chassi"
+                    value="{{ salvado.data_recebimento_recorte_chassi if salvado else form_data.data_recebimento_recorte_chassi if form_data else '' }}">
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data Venda do Salvado (Leilão)</label>
+                <input type="date" class="form-control" name="data_venda_salvado"
+                    value="{{ salvado.data_venda_salvado if salvado else form_data.data_venda_salvado if form_data else '' }}">
+            </div>
+        </div>
+        <!-- salvado -->
+    </div>
+
+    <!-- Container Nota Fiscal Entrada -->
+    <div class="card p-4 shadow-sm  container mt-4">
+        <div class="row mb-2">
+            <h4 class="col-md-12">Nota Fiscal Entrada</h4>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">N° NF Entrada</label>
+                <input type="text" class="form-control" name="n_nf_entrada"
+                    value="{{ salvado.n_nf_entrada if salvado else form_data.n_nf_entrada if form_data else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Valor NF Entrada</label>
+                <input type="text" class="form-control currency" name="valor_nf_entrada"
+                    value="{{ salvado.valor_nf_entrada|currency if salvado and salvado.valor_nf_entrada is not none else form_data.valor_nf_entrada if form_data and form_data.valor_nf_entrada else '' }}">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data Recebimento Docs para Emissão NF Entrada</label>
+                <input type="date" class="form-control" name="data_recebimento_docs_nf_entrada"
+                    value="{{ salvado.data_recebimento_docs_nf_entrada if salvado else form_data.data_recebimento_docs_nf_entrada if form_data else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data Solicitação NF Entrada</label>
+                <input type="date" class="form-control" name="data_solicitacao_nf_entrada"
+                    value="{{ salvado.data_solicitacao_nf_entrada if salvado else form_data.data_solicitacao_nf_entrada if form_data else '' }}">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data Recebimento NF Entrada</label>
+                <input type="date" class="form-control" name="data_recebimento_nf_entrada"
+                    value="{{ salvado.data_recebimento_nf_entrada if salvado else form_data.data_recebimento_nf_entrada if form_data else '' }}">
+            </div>
+        </div>
+    </div>
+
+    <!-- Container Vistorias -->
+    <div class="card p-4 shadow-sm  container mt-4">
+        <div class="row mb-2">
+            <h4 class="col-md-12">Vistorias</h4>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Vistorias Solicitada - Monta</label>
+                <input type="date" class="form-control" name="vistorias_solicitada_monta"
+                    value="{{ salvado.vistorias_solicitada_monta if salvado else form_data.vistorias_solicitada_monta if form_data else '' }}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Vistorias Recebidas - Monta</label>
+                <input type="date" class="form-control" name="vistorias_recebidas_monta"
+                    value="{{ salvado.vistorias_recebidas_monta if salvado else form_data.vistorias_recebidas_monta if form_data else '' }}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label">MONTA - Classificação</label>
+                <input type="text" class="form-control" name="classificacao_danos"
+                    value="{{ salvado.classificacao_danos if salvado else form_data.classificacao_danos if form_data else '' }}">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Vistorias Solicitada - ECV</label>
+                <input type="date" class="form-control" name="vistorias_solicitada_ecv"
+                    value="{{ salvado.vistorias_solicitada_ecv if salvado else form_data.vistorias_solicitada_ecv if form_data else '' }}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Vistorias Recebidas - ECV</label>
+                <input type="date" class="form-control" name="vistorias_recebidas_ecv"
+                    value="{{ salvado.vistorias_recebidas_ecv if salvado else form_data.vistorias_recebidas_ecv if form_data else '' }}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label">ECV - Classificação</label>
+                <input type="text" class="form-control" name="ecv"
+                    value="{{ salvado.ecv if salvado else form_data.ecv if form_data else '' }}">
+            </div>
+        </div>
+    </div>
+
+    <!-- Container Arrematante / Comprador -->
+    <div class="card p-4 shadow-sm  container mt-4">
+
+        <div class="row mb-2">
+            <h4 class="col-md-12">Arrematante</h4>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Nome Arrematante/Comprador</label>
+                <input type="text" class="form-control" name="nome_arrematante"
+                    value="{{ salvado.nome_arrematante if salvado else form_data.nome_arrematante if form_data else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">CNPJ/CPF Arrematante/Comprador</label>
+                <input type="number" class="form-control" name="cpf_cnpj_arrematante">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Valor da Venda</label>
+                <input type="text" class="form-control currency" name="valor_venda"
+                    value="{{ salvado.valor_venda|currency if salvado and salvado.valor_venda is not none else form_data.valor_venda if form_data and form_data.valor_venda else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data Docs Disponível Despachante - Transf. Arrematante</label>
+                <input type="date" class="form-control" name="data_docs_disponivel_transf_arrematante"
+                    value="{{ salvado.data_docs_disponivel_transf_arrematante if salvado else form_data.data_docs_disponivel_transf_arrematante if form_data else '' }}">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data Transferência Propriedade para Arrematante</label>
+                <input type="date" class="form-control" name="data_recebimento_docs_transf_arrematante"
+                    value="{{ salvado.data_recebimento_docs_transf_arrematante if salvado else form_data.data_recebimento_docs_transf_arrematante if form_data else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Doc Transferido ao Arrematante?</label>
+                <select class="form-select" name="doc_transferido_arrematante">
+                    <option value="" {% if (not salvado and not form_data.doc_transferido_arrematante) or (salvado and
+                        salvado.doc_transferido_arrematante=='' ) or (form_data and
+                        form_data.doc_transferido_arrematante=='' ) %}selected{% endif %}>Selecione</option>
+                    <option value="Sim" {% if (salvado and salvado.doc_transferido_arrematante=='Sim' ) or (form_data
+                        and form_data.doc_transferido_arrematante=='Sim' ) %}selected{% endif %}>Sim</option>
+                    <option value="Não" {% if (salvado and salvado.doc_transferido_arrematante=='Não' ) or (form_data
+                        and form_data.doc_transferido_arrematante=='Não' ) %}selected{% endif %}>Não</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container Nota Fiscal Saída -->
+    <div class="card p-4 shadow-sm  container mt-4">
+        <div class="row mb-2">
+            <h4 class="col-md-12">Nota Fiscal Saída</h4>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">N° NF Saída</label>
+                <input type="text" class="form-control" name="n_nf_saida"
+                    value="{{ salvado.n_nf_saida if salvado else form_data.n_nf_saida if form_data else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Valor NF Saída</label>
+                <input type="text" class="form-control currency" name="valor_nf_saida"
+                    value="{{ salvado.valor_nf_saida|currency if salvado and salvado.valor_nf_saida is not none else form_data.valor_nf_saida if form_data and form_data.valor_nf_saida else '' }}">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data Solicitação NF Saída</label>
+                <input type="date" class="form-control" name="data_solicitacao_nf_saida"
+                    value="{{ salvado.data_solicitacao_nf_saida if salvado else form_data.data_solicitacao_nf_saida if form_data else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data Recebimento NF Saída</label>
+                <input type="date" class="form-control" name="data_recebimento_nf_saida"
+                    value="{{ salvado.data_recebimento_nf_saida if salvado else form_data.data_recebimento_nf_saida if form_data else '' }}">
+            </div>
+        </div>
+    </div>
+
+    <!-- Container Informações adicionais -->
+    <div class="card p-4 shadow-sm  container mt-4">
+        <div class="col-md-12 mb-3 row">
+            <label class="form-label">Informações Adicionais</label>
+            <textarea class="form-control" name="historico"
+                rows="3">{{ salvado.historico if salvado else form_data.historico if form_data else '' }}</textarea>
+        </div>
+
+    </div>
+
+    <!-- Container Botões -->
+    <div class="container mt-4 mb-4">
         <div class="mt-3">
             <button type="submit" class="btn btn-primary">Salvar</button>
             <a href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
         </div>
-    </form>
+    </div>
+</form>
+
+<!-- Container Despesas -->
+<div class="card p-4 shadow-sm  container mt-4">
+    <div class="row mb-2">
+        <h4 class="col-md-12">Despesas</h4>
+    </div>
 </div>
+
 {% endblock %}
 
 {% block scripts %}

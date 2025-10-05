@@ -15,6 +15,7 @@ class Salvado(Base):
     nome_segurado = Column(String)
     nome_terceiro = Column(String)
     placa = Column(String(7), nullable=True, unique=True)
+    chassi = Column(String)
     marca = Column(String)
     modelo = Column(String)
     ano = Column(String)

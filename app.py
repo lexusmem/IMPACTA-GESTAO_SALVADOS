@@ -49,7 +49,7 @@ Salvado.__table__.create(engine_app, checkfirst=True)
 # Criando a tabela 'status_opcoes' explicitamente se não existir
 StatusOpcao.__table__.create(engine_app, checkfirst=True)
 
-# Inicializando repositórios para utilizar os metodos existentes nas rotas
+# Inicializando repositórios para utilizar os métodos existentes nas rotas
 salvado_repo = SalvadoRepository()
 status_repo = StatusOpcaoRepository()
 analista_repo = AnalistaRepository()
@@ -135,6 +135,11 @@ def salvado():
 def detalhes(id):
     salvado = salvado_repo.get_salvado_by_id(id)
     return render_template('salvado_detalhes.html', salvado=salvado)
+
+
+@app.route('/despesas')
+def despesas():
+    return render_template('base.html')
 
 
 @app.route('/atualizar/<int:id>', methods=['GET', 'POST'])
