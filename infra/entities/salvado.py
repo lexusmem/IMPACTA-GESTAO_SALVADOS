@@ -57,3 +57,4 @@ class Salvado(Base):
     doc_transferido_arrematante = Column(String)
     analista_responsavel = Column(String)
     historico = Column(String)
+    cpf_cnpj_arrematante = Column(String(18))

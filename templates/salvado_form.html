@@ -355,7 +355,8 @@
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label">CNPJ/CPF Arrematante/Comprador</label>
-                <input type="number" class="form-control" name="cpf_cnpj_arrematante">
+                <input type="number" class="form-control" name="cpf_cnpj_arrematante"
+                    value="{{ salvado.cpf_cnpj_arrematante if salvado else form_data.cpf_cnpj_arrematante if form_data else '' }}">
             </div>
         </div>
         <div class="row mb-2">

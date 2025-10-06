@@ -202,9 +202,9 @@ def exportar_salvados():
     if not salvados:
         possui_filtro = any(f for f in filtros.values() if f is not None)
         if possui_filtro:
-            mensagem_retorno_erro = "Não existem salvados para o filtro aplicado."
+            mensagem_retorno_erro = "Não existe salvados listados para exportar."
         else:
-            mensagem_retorno_erro = "Não existem salvados cadastrado no BD para exportação."
+            mensagem_retorno_erro = "Não existe salvados cadastrados no BD para exportar."
         return redirect(url_for('index', erro_modal=mensagem_retorno_erro))
     # Gere o CSV
     csv_data = "id,status,sinistro,apolice,analista_responsavel,data_entrada_salvado,placa\n"
