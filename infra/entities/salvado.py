@@ -1,5 +1,6 @@
 
 from sqlalchemy import Column, Integer, String, Date, Float
+from sqlalchemy.orm import relationship
 from infra.configs.base import Base
 
 
@@ -58,3 +59,4 @@ class Salvado(Base):
     analista_responsavel = Column(String)
     historico = Column(String)
     cpf_cnpj_arrematante = Column(String(18))
+    despesas = relationship("Despesa", back_populates="salvado")

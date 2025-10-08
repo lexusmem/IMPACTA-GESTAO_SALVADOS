@@ -4,9 +4,11 @@ from infra.repository.analistas_repository import AnalistaRepository
 from infra.repository.leiloeiros_repository import LeiloeiroRepository
 from infra.repository.salvados_repository import SalvadoRepository
 from infra.repository.status_opcoes_repository import StatusOpcaoRepository
+from infra.repository.despesas_repository import DespesaRepository
 from infra.entities.analista import Analista
 from infra.entities.salvado import Salvado
 from infra.entities.leiloeiro import Leiloeiro
+from infra.entities.despesa import Despesa
 from infra.entities.status_opcao import StatusOpcao
 from infra.configs.connection import DBConecctionHandleMaster
 from infra.configs.connection import DBConecctionHandleMasterAutocommit
@@ -49,11 +51,15 @@ Salvado.__table__.create(engine_app, checkfirst=True)
 # Criando a tabela 'status_opcoes' explicitamente se não existir
 StatusOpcao.__table__.create(engine_app, checkfirst=True)
 
+# Criando a tabela 'despesas' explicitamente se não existir
+Despesa.__table__.create(engine_app, checkfirst=True)
+
 # Inicializando repositórios para utilizar os métodos existentes nas rotas
 salvado_repo = SalvadoRepository()
 status_repo = StatusOpcaoRepository()
 analista_repo = AnalistaRepository()
 leiloeiro_repo = LeiloeiroRepository()
+despesa_repo = DespesaRepository()
 
 
 @app.route('/')
@@ -134,12 +140,8 @@ def salvado():
 @app.route('/detalhes/<int:id>')
 def detalhes(id):
     salvado = salvado_repo.get_salvado_by_id(id)
-    return render_template('salvado_detalhes.html', salvado=salvado)
-
-
-@app.route('/despesas')
-def despesas():
-    return render_template('base.html')
+    despesas = despesa_repo.get_despesas_por_salvado(id)
+    return render_template('salvado_detalhes.html', salvado=salvado, despesas=despesas)
 
 
 @app.route('/atualizar/<int:id>', methods=['GET', 'POST'])
@@ -152,6 +154,7 @@ def atualizar(id):
     form_data = {}
     erro_modal = None
     sucesso = None
+    despesas = despesa_repo.get_despesas_por_salvado(id)
 
     if request.method == 'POST':
         form_data = {key: request.form.get(
@@ -174,7 +177,7 @@ def atualizar(id):
             erro_modal = "Já Existe Salvado Cadastrado com esta Placa!"
             return render_template('salvado_form.html', status_opcoes=status_opcoes, analistas_opcoes=analistas_opcoes,
                                    leiloeiros_opcoes=leiloeiros_opcoes, salvado=salvado, form_data=form_data, errors=errors,
-                                   error_messages=[], erro_modal=erro_modal)
+                                   error_messages=[], erro_modal=erro_modal, despesas=despesas)
         return redirect(url_for('index'))
     else:
         form_data = {key: getattr(salvado, key, '')
@@ -183,7 +186,7 @@ def atualizar(id):
                            status_opcoes=status_opcoes,
                            analistas_opcoes=analistas_opcoes,
                            leiloeiros_opcoes=leiloeiros_opcoes,
-                           errors=errors, form_data=form_data, error_messages=[], erro_modal=erro_modal)
+                           errors=errors, form_data=form_data, error_messages=[], erro_modal=erro_modal, despesas=despesas)
 
 
 @app.route('/exportar_salvados')
@@ -285,6 +288,40 @@ def gerenciar():
                   for l in leiloeiro_repo.get_all_leiloeiros()]
     return render_template('gerenciar.html', status_opcoes=status_opcoes, analistas=analistas,
                            leiloeiros=leiloeiros, secao=secao, erro_modal=erro_modal, sucesso=sucesso)
+
+
+@app.route('/despesas/<int:id>', methods=['GET', 'POST'])
+def despesas(id):
+    salvado = salvado_repo.get_salvado_by_id(id)
+    despesas = despesa_repo.get_despesas_por_salvado(id)
+    if request.method == 'POST':
+        despesa_data = {
+            'salvado_id': id,
+            'fornecedor': request.form.get('fornecedor'),
+            'data': request.form.get('data'),
+            'ocorrencia': request.form.get('ocorrencia'),
+            'valor': float(request.form.get('valor', 0)),
+            'observacao': request.form.get('observacao')
+        }
+        despesa_repo.add_despesa(**despesa_data)
+        return redirect(url_for('despesas', id=id))
+    return render_template('despesas.html', salvado=salvado, despesas=despesas)
+
+
+@app.route('/incluir_despesa/<int:salvado_id>', methods=['POST'])
+def incluir_despesa(salvado_id):
+    # Pega os dados do formulário
+    form = request.form
+    despesa_data = {
+        'salvado_id': salvado_id,
+        'fornecedor': form.get('fornecedor'),
+        'data': form.get('data'),
+        'ocorrencia': form.get('ocorrencia'),
+        'valor': float(form.get('valor', 0)),
+        'observacao': form.get('observacao')
+    }
+    despesa_repo.add_despesa(**despesa_data)
+    return redirect(url_for('despesas', id=salvado_id))
 
 
 if __name__ == '__main__':
