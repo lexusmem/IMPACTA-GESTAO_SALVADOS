@@ -9,7 +9,7 @@ class DBConecctionHandleMaster:
             "mssql+pyodbc",
             username="root",
             password="0000",
-            host="AlexSousa",
+            host="DESKTOP-32J24GI",
             database="master",
             query={"driver": "ODBC Driver 17 for SQL Server"}
         )
@@ -38,7 +38,7 @@ class DBConecctionHandleMasterAutocommit:
             "mssql+pyodbc",
             username="root",
             password="0000",
-            host="AlexSousa",
+            host="DESKTOP-32J24GI",
             database="master",
             query={"driver": "ODBC Driver 17 for SQL Server"},
         )
@@ -68,7 +68,7 @@ class DBConecctionHandleApp:
             "mssql+pyodbc",
             username="root",
             password="0000",
-            host="AlexSousa",
+            host="DESKTOP-32J24GI",
             database="salvados",
             query={"driver": "ODBC Driver 17 for SQL Server"}
         )

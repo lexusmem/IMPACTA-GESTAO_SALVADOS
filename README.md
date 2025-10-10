@@ -10,6 +10,7 @@ Configurar SQL Server:
 (habilitar sysadmin)
 -segurança - logon - botão direito - status
 (conceder e habilitado)
+-logar com o usuario root no ssms e marcar a opção "Trust server certificate" na janela de Connection Security.
 -windows + sql Server Configuration Manager
 (Configuração de Rede do sql server - protocolos para MSSQLSERVER)
 (Habilitar memoria/pipes/tcp/ip)
