@@ -144,6 +144,55 @@ def detalhes(id):
     return render_template('salvado_detalhes.html', salvado=salvado, despesas=despesas)
 
 
+@app.route('/despesas_listagem', methods=['GET', 'POST'])
+def despesas_listagem():
+    erro_modal = request.args.get('erro_modal')
+    filtros = {
+        'fornecedor': request.form.get('fornecedor') if request.method == 'POST' else request.args.get('fornecedor'),
+        'ocorrencia': request.form.get('ocorrencia') if request.method == 'POST' else request.args.get('ocorrencia'),
+        'placa': request.form.get('placa') if request.method == 'POST' else request.args.get('placa'),
+        'sinistro': request.form.get('sinistro') if request.method == 'POST' else request.args.get('sinistro'),
+    }
+    despesas = despesa_repo.get_despesas_filtradas(**filtros)
+
+    possui_filtro = any(f for f in filtros.values() if f)
+
+    if not despesas and possui_filtro:
+        erro_modal = "Não existem despesas para o filtro aplicado."
+
+    return render_template('despesas_listagem.html', despesas=despesas, erro_modal=erro_modal)
+
+
+@app.route('/exportar_despesas')
+def exportar_despesas():
+    filtros = {
+        'fornecedor': request.args.get('fornecedor'),
+        'ocorrencia': request.args.get('ocorrencia'),
+        'data': request.args.get('data'),
+        'placa': request.args.get('placa'),
+        'sinistro': request.args.get('sinistro'),
+    }
+    despesas = despesa_repo.get_despesas_filtradas(**filtros)
+
+    if not despesas:
+        possui_filtro = any(f for f in filtros.values() if f is not None)
+        if possui_filtro:
+            mensagem_retorno_erro = "Não existe despesas listadas para exportar."
+        else:
+            mensagem_retorno_erro = "Não existe despesas cadastradas no BD para exportar."
+        return redirect(url_for('despesas_listagem', erro_modal=mensagem_retorno_erro))
+
+    # Cabeçalho do CSV
+    csv_data = "sinistro,placa,fornecedor,Tipo de Despesa,valor,data,observacao\n"
+    for d in despesas:
+        csv_data += f"{d.salvado.sinistro},{d.salvado.placa},{d.fornecedor},{d.ocorrencia},{d.valor},{d.data},{d.observacao}\n"
+    return Response(
+        csv_data,
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment;filename=despesas.csv"}
+    )
+
+
 @app.route('/atualizar/<int:id>', methods=['GET', 'POST'])
 def atualizar(id):
     salvado = salvado_repo.get_salvado_by_id(id)

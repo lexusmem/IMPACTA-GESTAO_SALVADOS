@@ -1,6 +1,8 @@
 from infra.configs.connection import DBConecctionHandleApp
 from infra.entities.despesa import Despesa
 from sqlalchemy import text
+from sqlalchemy.orm import joinedload
+from sqlalchemy import and_
 
 
 class DespesaRepository:
@@ -16,7 +18,27 @@ class DespesaRepository:
 
     def get_all_despesas(self):
         with DBConecctionHandleApp() as db:
-            return db.session.query(Despesa).all()
+            return db.session.query(Despesa).options(joinedload(Despesa.salvado)).all()
+
+    def get_despesas_filtradas(self, **filtros):
+        with DBConecctionHandleApp() as db:
+            query = db.session.query(Despesa).options(
+                joinedload(Despesa.salvado))
+            filters = []
+            if 'fornecedor' in filtros and filtros['fornecedor']:
+                filters.append(Despesa.fornecedor.ilike(
+                    f'%{filtros["fornecedor"]}%'))
+            if 'ocorrencia' in filtros and filtros['ocorrencia']:
+                filters.append(Despesa.ocorrencia.ilike(
+                    f'%{filtros["ocorrencia"]}%'))
+            if 'placa' in filtros and filtros['placa']:
+                filters.append(Despesa.salvado.has(placa=filtros['placa']))
+            if 'sinistro' in filtros and filtros['sinistro']:
+                filters.append(Despesa.salvado.has(
+                    sinistro=filtros['sinistro']))
+            if filters:
+                query = query.filter(and_(*filters))
+            return query.all()
 
     def get_despesas_por_salvado(self, salvado_id):
         with DBConecctionHandleApp() as db:
